@@ -12,6 +12,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _formGlobalKey = GlobalKey<FormState>();
   Priority _selectedPriority = Priority.low;
+  String _title = '';
+  String _description = '';
 
   final List<Todo> todos = [
     const Todo(
@@ -59,6 +61,9 @@ class _HomeState extends State<Home> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _title = value!;
+                      },
                     ),
 
                     //todo description
@@ -73,6 +78,9 @@ class _HomeState extends State<Home> {
                           return "enter a description at least 5 chars long.";
                         }
                         return null;
+                      },
+                      onSaved: (value) {
+                        _description = value!;
                       },
                     ),
 
@@ -97,7 +105,19 @@ class _HomeState extends State<Home> {
                     ),
                     FilledButton(
                         onPressed: () {
-                          _formGlobalKey.currentState!.validate();
+                          if (_formGlobalKey.currentState!.validate()) {
+                            _formGlobalKey.currentState!.save();
+
+                            setState(() {
+                              todos.add(Todo(
+                                  title: _title,
+                                  description: _description,
+                                  priority: _selectedPriority));
+                            });
+
+                            _formGlobalKey.currentState!.reset();
+                            _selectedPriority = Priority.low;
+                          }
                         },
                         style: FilledButton.styleFrom(
                             backgroundColor: Colors.grey[800],
