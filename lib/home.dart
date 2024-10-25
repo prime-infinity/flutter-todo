@@ -10,7 +10,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final TextEditingController _emailController = TextEditingController();
+  final _formGlobalKey = GlobalKey<FormState>();
 
   final List<Todo> todos = [
     const Todo(
@@ -42,20 +42,56 @@ class _HomeState extends State<Home> {
             Expanded(child: TodoList(todos: todos)),
 
             // form stuff below here
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(label: Text("Email address")),
-            ),
+            Form(
+                key: _formGlobalKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    //todo tittle
+                    TextFormField(
+                      maxLength: 20,
+                      decoration:
+                          const InputDecoration(label: Text("todo title")),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "you must enter a value for title.";
+                        }
+                        return null;
+                      },
+                    ),
 
-            const SizedBox(
-              height: 20,
-            ),
-            FilledButton(
-                onPressed: () {
-                  print(_emailController.text.trim());
-                },
-                child: const Text("print the email"))
+                    //todo description
+                    TextFormField(
+                      maxLength: 40,
+                      decoration: const InputDecoration(
+                          label: Text("todo description")),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return "enter a description at least 5 chars long.";
+                        }
+                        return null;
+                      },
+                    ),
+
+                    //priority
+
+                    //submit button
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    FilledButton(
+                        onPressed: () {
+                          _formGlobalKey.currentState!.validate();
+                        },
+                        style: FilledButton.styleFrom(
+                            backgroundColor: Colors.grey[800],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4))),
+                        child: const Text("add"))
+                  ],
+                ))
           ],
         ),
       ),
