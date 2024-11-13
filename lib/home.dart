@@ -28,6 +28,10 @@ class _HomeState extends State<Home> {
         title: 'Pay bills',
         description: 'The gas bill needs paying ASAP.',
         priority: Priority.urgent),
+    const Todo(
+        title: 'Read a book',
+        description: 'Dune by Frank',
+        priority: Priority.low),
   ];
 
   @override
